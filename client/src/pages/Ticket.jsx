@@ -32,7 +32,7 @@ function Ticket() {
 	}
 
 	const onTicketClose = () => {
-		6dispatch(closeTicket(ticketId))
+		dispatch(closeTicket(ticketId))
 		toast.success('Ticket closed')
 		navigate('/tickets')
 	}
