@@ -136,6 +136,10 @@ h3 {
   margin: 0 0 5px 3px;
 }
 
+.form-control {
+	min-width: 60vw;
+}
+
 .btn {
   padding: 10px 20px;
   border: 1px solid #000;
