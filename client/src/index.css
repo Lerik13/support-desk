@@ -136,7 +136,7 @@ h3 {
   margin: 0 0 5px 3px;
 }
 
-.form-control {
+.modal-control {
 	min-width: 60vw;
 }
 
@@ -154,6 +154,30 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.btn-note {
+	padding: 10px 10px;
+	border: 1px solid rgba(0, 0, 0, 0.9);
+	border-radius: 5px;
+	background: rgba(0, 0, 0, 0.9);
+	color: #fff;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+	text-align: center;
+	appearance: button;
+}
+
+.note p {
+	margin-bottom: 8px;	
+}
+.btn-note:hover {
+	transform: scale(0.98);
+}
+
+.btn-edit {
+	margin-right: 10px;
 }
 
 .btn svg {
@@ -177,6 +201,11 @@ h3 {
 
 .btn-danger {
   background: darkred;
+  border: none;
+}
+
+.btn-open {
+  background: steelblue;
   border: none;
 }
 
@@ -241,6 +270,12 @@ h3 {
   text-align: center;
 }
 
+.ticket-page .status {
+	position: absolute;
+	top: -20px;
+	right: 0;
+}
+
 .status-new {
   background-color: green;
   color: #fff;
@@ -265,9 +300,10 @@ h3 {
 }
 
 .ticket-page h2 {
-  display: flex;
+  /*display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between;*/
+  position: relative;
 }
 
 .ticket-page .btn {
@@ -292,7 +328,7 @@ h3 {
   border: 1px solid #e6e6e6;
   border-radius: 5px;
   text-align: left;
-  padding: 20px;
+  padding: 20px 20px 50px 20px;
   margin-bottom: 20px;
   position: relative;
 }
@@ -312,6 +348,14 @@ h3 {
   right: 10px;
   font-size: 14px;
 }
+
+.note-btns {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 14px;
+}
+
 
 .delete-note {
   color: red;

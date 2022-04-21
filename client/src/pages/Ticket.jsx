@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import {FaPlus} from 'react-icons/fa'
-import { getTicket, closeTicket } from '../features/tickets/ticketSlice'
-import { getNotes, createNote, reset as notesReset } from '../features/notes/noteSlice'
+import { getTicket, closeTicket, openTicket } from '../features/tickets/ticketSlice'
+import { getNotes, createNote, reset as notesReset, editNote, deleteNote } from '../features/notes/noteSlice'
 import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
 import BackButton from '../components/BackButton'
@@ -26,6 +26,8 @@ Modal.setAppElement('#root');
 function Ticket() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [noteText, setNoteText] = useState('');
+	const [isEditNote, setIsEditNote] = useState(false); // by default Modal window open for Creating Note
+	const [noteId, setNoteId] = useState(null);
 
 	const {ticket, isLoading, isSuccess, isError, message} = useSelector((state) => state.tickets)
 	const {notes, isLoading: notesIsLoading} = useSelector((state) => state.notes)
@@ -47,20 +49,53 @@ function Ticket() {
 	}, [isError, message, ticketId]);
 
 	const onTicketClose = () => {
-		dispatch(closeTicket(ticketId))
-		toast.success('Ticket closed')
-		navigate('/tickets')
+		if (window.confirm('Are you sure you want to close the ticket?') === true) {
+			dispatch(closeTicket(ticketId))
+			toast.success('Ticket closed')
+			navigate('/tickets')
+		}
+	}
+
+	const onTicketOpen = () => {
+		if (window.confirm('Are you sure you want to reopen the ticket?') === true) {
+			dispatch(openTicket(ticketId))
+			toast.success('Ticket reopened')
+			navigate('/tickets')
+		}
 	}
 
 	// Open/Close modal
-	const openModal = () => setModalIsOpen(true)
-	const closeModal = () => setModalIsOpen(false)
+	const openModal = () => {
+		setIsEditNote(false)
+		setModalIsOpen(true)
+	}
+	const openModalForEdit = (id, txt) => {
+		setIsEditNote(true)
+		setNoteId(id)
+		setNoteText(txt)
+		setModalIsOpen(true)
+	}
+	const closeModal = () => {
+		setNoteText('')
+		setModalIsOpen(false)
+	}
 
 	// Create note - submit
 	const onNoteSubmit = (e) => {
 		e.preventDefault()
-		dispatch(createNote({noteText, ticketId}))
+		if (isEditNote) {
+			dispatch(editNote({noteText, ticketId, noteId}))
+		} else {
+			dispatch(createNote({noteText, ticketId}))
+		}
 		closeModal()
+	}
+
+	// Delete note
+	const removeNote = (id) => {
+		if (window.confirm('Are you sure you want to remove note?') === true) {
+			dispatch(deleteNote({ticketId, noteId: id}))
+		}
 	}
 
 	if (isLoading || notesIsLoading) {
@@ -93,15 +128,17 @@ function Ticket() {
 				<button className="btn" onClick={openModal}><FaPlus/> Add Note</button>
 			)}
 
-			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel='Add Note'>
-				<h2>Add Note</h2>
+			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel={isEditNote ? 'Edit Note': 'Addd Note'}>
+				<h2>
+					{isEditNote ? 'Edit Note': 'Add Note'}
+				</h2>
 				<button className="btn-close" onClick={closeModal}>X</button>
 				<form onSubmit={onNoteSubmit}>
 					<div className="form-group">
 						<textarea 
 							name="noteText"
 							id="noteText"
-							className='form-control'
+							className='form-control modal-control'
 							placeholder='Note text'
 							value={noteText}
 							onChange={(e) => setNoteText(e.target.value)}
@@ -114,10 +151,19 @@ function Ticket() {
 			</Modal>
 
 			{notes.map((note) => (
-				<NoteItem key={note._id} note={note} />
+				<NoteItem 
+					key={note._id}
+					note={note}
+					editHandler={() => {openModalForEdit(note._id, note.text)}}
+					deleteHandler={() => {removeNote(note._id)}}
+				/>
 			))}
 
-			{ticket.status !== 'closed' && (
+			{ticket.status === 'closed' ? (
+				<button className="btn btn-block btn-open" onClick={onTicketOpen}>
+					Reopen Ticket
+				</button>
+			) : (
 				<button className="btn btn-block btn-danger" onClick={onTicketClose}>
 					Close Ticket
 				</button>

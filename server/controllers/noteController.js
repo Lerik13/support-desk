@@ -29,6 +29,33 @@ const getNotes = asyncHandler(async (req, res) => {
 	res.status(200).json(notes)
 })
 
+// @desc Get ticket note
+// @route GET /api/tickets/:ticketId/notes/:id
+// @access Private
+const getNote = asyncHandler(async (req, res) => {
+	// get user using Id in the JWT
+	const user = await User.findById(req.user.id)
+
+	if (!user) {
+		res.status(401)
+		throw new Error('User not found')
+	}
+
+	const note = await Note.findById(req.params.id)
+
+	if (!note) {
+		res.status(404)
+		throw new Error('Note not found')
+	}
+
+	if (note.user.toString() !== req.user.id) {
+		res.status(401)
+		throw new Error('Not Authorized')
+	}
+	
+	res.status(200).json(note)
+})
+
 // @desc Create ticket note
 // @route POST /api/tickets/:ticketId/notes
 // @access Private
@@ -84,11 +111,11 @@ const deleteNote = asyncHandler(async (req, res) => {
 	
 	await note.remove()
 
-	res.status(200).json({success: true})
+	res.status(200).json({success: true, _id: req.params.id})
 })
 
 // @desc Update user ticket note
-// @route PUT /api/tickets/:ticketId/notes
+// @route PUT /api/tickets/:ticketId/notes/:noteId
 // @access Private
 const updateNote = asyncHandler(async (req, res) => {
 	// get user using Id in the JWT
@@ -111,13 +138,14 @@ const updateNote = asyncHandler(async (req, res) => {
 		throw new Error('Not Authorized')
 	}
 	
-	const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body)
+	const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body, {new: true})
 
 	res.status(200).json(updatedNote)
 })
 
 module.exports = {
 	getNotes,
+	getNote,
 	addNote,
 	deleteNote,
 	updateNote
