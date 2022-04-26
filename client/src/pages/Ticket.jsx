@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import {FaPlus} from 'react-icons/fa'
-import { getTicket, closeTicket, openTicket } from '../features/tickets/ticketSlice'
+import { getTicket, closeTicket, openTicket, editDescription } from '../features/tickets/ticketSlice'
 import { getNotes, createNote, reset as notesReset, editNote, deleteNote } from '../features/notes/noteSlice'
 import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
 import BackButton from '../components/BackButton'
 import NoteItem from '../components/NoteItem'
 import Modal from 'react-modal';
+import { getProduct, getProductOfTicket } from "../features/products/productSlice";
+import { FaEdit } from 'react-icons/fa'
 
-const customStyles = {
+const customStyles = { // for Modal
 	content: {
 		top: '50%',
 		left: '50%',
@@ -20,20 +22,21 @@ const customStyles = {
 		transform: 'translate(-50%, -50%)',
 	},
 };
-
 Modal.setAppElement('#root');
 
 function Ticket() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
-	const [noteText, setNoteText] = useState('');
-	const [isEditNote, setIsEditNote] = useState(false); // by default Modal window open for Creating Note
+	const [modalText, setModalText] = useState('');
+	const [modalPurpose, setModalPurpose] = useState('create note'); // by default Modal window open for Creating Note, 'edit note', 'edit description'
 	const [noteId, setNoteId] = useState(null);
 
 	const {ticket, isLoading, isSuccess, isError, message} = useSelector((state) => state.tickets)
 	const {notes, isLoading: notesIsLoading} = useSelector((state) => state.notes)
+
+	const {product} = useSelector((state) => state.products)
+	const productName = product ? product.name : 'not exists'
 	
 	const dispatch = useDispatch()
-	const params = useParams()
 	const navigate = useNavigate()
 	const {ticketId} = useParams()
 
@@ -44,6 +47,7 @@ function Ticket() {
 
 		dispatch(getTicket(ticketId))
 		dispatch(getNotes(ticketId))
+		dispatch(getProductOfTicket(ticketId))
 
 		// eslint-disable-next-line
 	}, [isError, message, ticketId]);
@@ -65,28 +69,33 @@ function Ticket() {
 	}
 
 	// Open/Close modal
-	const openModal = () => {
-		setIsEditNote(false)
+	const openModalForAddNote = () => {
+		setModalPurpose('create note')
 		setModalIsOpen(true)
 	}
-	const openModalForEdit = (id, txt) => {
-		setIsEditNote(true)
+	const openModalForEditNote = (id, txt) => {
+		setModalPurpose('edit note')
 		setNoteId(id)
-		setNoteText(txt)
+		setModalText(txt)
 		setModalIsOpen(true)
 	}
 	const closeModal = () => {
-		setNoteText('')
+		setModalText('')
 		setModalIsOpen(false)
 	}
 
-	// Create note - submit
+	// Submit - by default: Create Note, if (isEditNote) Edit Note, if (isEditDescription) Edit Description
 	const onNoteSubmit = (e) => {
 		e.preventDefault()
-		if (isEditNote) {
-			dispatch(editNote({noteText, ticketId, noteId}))
-		} else {
-			dispatch(createNote({noteText, ticketId}))
+		switch (modalPurpose) {
+			case 'edit note':
+				dispatch(editNote({noteText: modalText, ticketId, noteId}))
+				break;
+			case 'edit description':
+				dispatch(editDescription({description: modalText, ticketId}))
+				break;
+			default:
+				dispatch(createNote({noteText: modalText, ticketId}))
 		}
 		closeModal()
 	}
@@ -96,6 +105,13 @@ function Ticket() {
 		if (window.confirm('Are you sure you want to remove note?') === true) {
 			dispatch(deleteNote({ticketId, noteId: id}))
 		}
+	}
+
+	//Edit description
+	const editDescriptionText = () => {
+		setModalPurpose('edit description')		
+		setModalText(ticket.description)
+		setModalIsOpen(true)
 	}
 
 	if (isLoading || notesIsLoading) {
@@ -111,37 +127,50 @@ function Ticket() {
 			<header className="ticket-header">
 				<BackButton url='/tickets' />
 				<h2>
-					Ticket ID: {ticket._id}
+					<span className='color-lighter'>Ticket ID:</span> {ticket._id}
 					<span className={`status status-${ticket.status}`}>{ticket.status}</span>
 				</h2>
-				<h3>Date Submitted: {new Date(ticket.createdAt).toLocaleString('en-US')}</h3>
-				<h3>Product: {ticket.product}</h3>
+				<h3>
+					<span className='color-lighter'>Date Submitted:</span> {new Date(ticket.createdAt).toLocaleString('en-US')}
+				</h3>
+				<h3>
+					<span className='color-lighter'>Product:</span> {productName}
+				</h3>
 				<hr />
 				<div className="ticket-desc">
 					<h3>Description of Issue</h3>
 					<p>{ticket.description}</p>
+					{ticket.status !== 'closed' && (
+						<div className="desc-btns">
+							<button onClick={editDescriptionText} className='btn-note btn-edit'>
+								<FaEdit />
+							</button>
+						</div>
+					)}
 				</div>
 				<h2>Notes</h2>
 			</header>
 
 			{ticket.status !== 'closed' && (
-				<button className="btn" onClick={openModal}><FaPlus/> Add Note</button>
+				<button className="btn" onClick={openModalForAddNote}><FaPlus/> Add Note</button>
 			)}
 
-			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel={isEditNote ? 'Edit Note': 'Addd Note'}>
+			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel='Edit modal text'>
 				<h2>
-					{isEditNote ? 'Edit Note': 'Add Note'}
+					{(modalPurpose === 'edit description') 
+					? 'Edit description' 
+					: ((modalPurpose === 'edit note') ? 'Edit note' : 'Add note') }
 				</h2>
 				<button className="btn-close" onClick={closeModal}>X</button>
 				<form onSubmit={onNoteSubmit}>
 					<div className="form-group">
 						<textarea 
-							name="noteText"
-							id="noteText"
+							name="modalText"
+							id="modalText"
 							className='form-control modal-control'
-							placeholder='Note text'
-							value={noteText}
-							onChange={(e) => setNoteText(e.target.value)}
+							placeholder={(modalPurpose === 'edit description') ? 'Description of issue' : 'Note text'}
+							value={modalText}
+							onChange={(e) => setModalText(e.target.value)}
 						></textarea>
 					</div>
 					<div className="form-group">
@@ -149,12 +178,13 @@ function Ticket() {
 					</div>
 				</form>
 			</Modal>
-
+			
 			{notes.map((note) => (
 				<NoteItem 
 					key={note._id}
 					note={note}
-					editHandler={() => {openModalForEdit(note._id, note.text)}}
+					isEdited={ticket.status !== 'closed'}
+					editHandler={() => {openModalForEditNote(note._id, note.text)}}
 					deleteHandler={() => {removeNote(note._id)}}
 				/>
 			))}

@@ -4,15 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
+import { getProducts } from "../features/products/productSlice";
 import { createTicket, reset } from '../features/tickets/ticketSlice'
 
 function NewTicket() {
 	const {user} = useSelector((state) => state.auth)
 	const {isLoading, isError, isSuccess, message} = useSelector((state) => state.tickets)
+	const {products} = useSelector((state) => state.products)
 
 	const [name] = useState(user.name);
 	const [email] = useState(user.email);
-	const [product, setProduct] = useState('iPhone');
+	const [product, setProduct] = useState(-1);
 	const [description, setDescription] = useState('');
 
 	const dispatch = useDispatch()
@@ -27,13 +29,24 @@ function NewTicket() {
 			dispatch(reset())
 			navigate('/tickets')
 		}
+		
+		dispatch(getProducts())
+
+	
 
 		dispatch(reset())
 	}, [dispatch, isError, isSuccess, navigate, message]);
 
 	const onSubmit = (e) => {
 		e.preventDefault()
-		dispatch(createTicket({product, description}))
+		if (product === -1) {
+			toast.error('Please select a product')
+		} else if(!description) {
+			toast.error('Please fill a description field')
+		}
+		else {
+			dispatch(createTicket({product, description}))
+		}
 	}
 
 	if (isLoading) {
@@ -61,10 +74,10 @@ function NewTicket() {
 					<div className="form-group">
 						<label htmlFor="product">Product</label>
 						<select name="product" id="product" value={product} onChange={(e) => setProduct(e.target.value)}>
-							<option value="iPhone">iPhone</option>
-							<option value="Macbook Pro">Macbook Pro</option>
-							<option value="iMac">iMac</option>
-							<option value="iPad">iPad</option>
+							<option key={-1} value={-1}>Select a product</option>
+							{products.map((p) => (
+								<option key={p._id} value={p._id}>{p.name}</option>	
+							))}
 						</select>
 					</div>
 					<div className="form-group">

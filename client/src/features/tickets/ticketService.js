@@ -62,12 +62,25 @@ const openTicket = async (ticketId, token) => {
 	return response.data
 }
 
+// Edit description
+const editDescription = async (description, ticketId, token) => {
+	const config= {
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	}
+
+	const response = await axios.put(API_URL + ticketId, {description: description}, config)
+	return response.data
+}
+
 const ticketService = {
 	createTicket,
 	getTickets,
 	getTicket,
 	closeTicket,
-	openTicket
+	openTicket,
+	editDescription
 }
 
 export default ticketService

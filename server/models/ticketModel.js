@@ -8,9 +8,9 @@ const ticketSchema = mongoose.Schema(
 			ref: 'User'
 		},
 		product: {
-			type: String,
+			type: mongoose.Schema.Types.ObjectId,
 			require: [true, 'Please select a product'],
-			enum: ['iPhone', 'Macbook Pro', 'iMac', 'iPad']
+			ref: 'Product'
 		},
 		description: {
 			type: String,

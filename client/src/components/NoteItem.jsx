@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux'
-import { FaEdit, FaTrashAlt  } from 'react-icons/fa'
+import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 
-function NoteItem({note, editHandler, deleteHandler}) {
+function NoteItem({note, isEdited, editHandler, deleteHandler}) {
 	const {user} = useSelector((state) => state.auth)
 
 	return (
@@ -14,12 +14,14 @@ function NoteItem({note, editHandler, deleteHandler}) {
 			</h5>
 			<p>{note.text}</p>
 			<div className="note-date">{new Date(note.createdAt).toLocaleString('en-US')}</div>
-			<div className="note-btns">
-				<div>
-					<button onClick={editHandler} className='btn-note btn-edit'><FaEdit /></button>
-					<button onClick={deleteHandler} className='btn-note btn-delete'><FaTrashAlt /></button>
+			{ isEdited && !note.isStaff && (
+				<div className="note-btns">
+					<div>
+						<button onClick={editHandler} className='btn-note btn-edit'><FaEdit /></button>
+						<button onClick={deleteHandler} className='btn-note btn-delete'><FaTrashAlt /></button>
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	)
 }
