@@ -1,23 +1,14 @@
-<h1>Support Desk Application</h1>
-<p>Client-Server app for tracking tickets, using stack of technologies MERN: MongoDB + ExpressJS + React + NodeJS</p>
-<p>State-management: Redux/toolkit</p>
-<p>Design: mobile-first</p>
-<p>MongoDB models:
-  <ol>
-    <li>users <br>
-        fields: name, email, password, isAdmin</li>
-    <li>products<br>
-        fields: name</li>
-    <li>tickets <br>
-        fields: user, product, description, status
-    </li>
-    <li>notes <br>
-        fields: user, ticket, text, isStaff
-    </li>
-  </ol>
-</p>
+# Support Desk Application
+Client-Server app for tracking tickets, using stack of technologies MERN: MongoDB + ExpressJS + React + NodeJS<br>
 
-<h3>Client Functionality:</h3>
+State-management: Redux/toolkit<br>
+
+Design: mobile-first<br>
+
+MongoDB models:<br>
+![DB Schema](https://github.com/Lerik13/support-desk/blob/master/schemaDB.jpg?raw=true "DB Schema")
+
+### Client Functionality
 <ol>
   <li>Register User</li>
   <li>Login/Logout
@@ -34,8 +25,8 @@
   <li>Add/Edit/Remove Note for user's ticket if the ticket is not-clossed and this note is not from Admin</li>
 </ol>
 
-<h3>Developing details:</h3>
-<h4>Backend libs</h4>
+### Developing details
+#### Backend libs:
 <ul>
   <li>express - Express-framework for creating web-apps using NodeJS</li>
   <li>dotenv - for environment variables</li>
@@ -44,7 +35,8 @@
   <li>nodemon (dependency) - constanly watch server.js, so we don't need to restart server</li>
   <li>express-async-handler (dependency) - for use async-await - handling exceptions inside of async-routes</li>
 </ul>
-<h4>Frontend libs</h4>
+
+#### Frontend libs:
 <ul>
   <li>react, react-dom version of 17 because of issue for lib 'react-modal'
   <li>concurrently - run client and server at the same time</li>
@@ -55,8 +47,8 @@
   <li>react-modal - work with modal windows</li>
 </ul>
 
-<h3>Deploying:</h3>
-<h4>set Environment Variables</h4>
+### Deploying
+#### set Environment Variables:
 <ol>
   <li>MongoDB database URI (MONGO_URI)</li>
   <li>JWT secret (JWT_SECRET)</li>
