@@ -1,55 +1,45 @@
 # Support Desk Application
-Client-Server app for tracking tickets, using stack of technologies MERN: MongoDB + ExpressJS + React + NodeJS<br>
+Client-Server app for tracking tickets, using stack of technologies MERN: MongoDB + ExpressJS + React + NodeJS
 
-State-management: Redux/toolkit<br>
+State-management: Redux/toolkit
 
-Design: mobile-first<br>
+Design: mobile-first
 
-MongoDB models:<br>
+MongoDB models:
+
 ![DB Schema](https://github.com/Lerik13/support-desk/blob/master/schemaDB.jpg?raw=true "DB Schema")
 
 ### Client Functionality
-<ol>
-  <li>Register User</li>
-  <li>Login/Logout
-      <p>test user: john@gmail.com, password: 123<br>
-        Saving JWT-token in user's Local Storage</p>
-  </li>
-  <li>Create new Ticket for authorized user</li>
-  <li>See all user's tickets</li>
-  <li>Edit description of user's ticket if the ticket is not-clossed</li>
-  <li>Change status for ticket <br>
-    ticket created with status='new',<br>
-    if status is closed, user cannot edit the ticket, <br>
-    user has possibility to reopen the ticket, status will be open</li>
-  <li>Add/Edit/Remove Note for user's ticket if the ticket is not-clossed and this note is not from Admin</li>
-</ol>
+1. Register User
+2. Login/Logout (saving JWT-token in user's Local Storage)
+```
+test user: john@gmail.com, password: 123
+```
+3. Create new Ticket for authorized user
+4. See all user's tickets
+5. Edit description of user's ticket if the ticket is not-clossed
+6. Change status for ticket: (ticket created with status='new'; if status is closed, user cannot edit the ticket; user has possibility to reopen the ticket, status will be open)
+7. Add/Edit/Remove Note for user's ticket if the ticket is not-clossed and this note is not from Admin
 
 ### Developing details
 #### Backend libs:
-<ul>
-  <li>express - Express-framework for creating web-apps using NodeJS</li>
-  <li>dotenv - for environment variables</li>
-  <li>colors - use colors for console-log</li>
-  <li>jsonwebtoken - generate web-token for autontification in client-side</li>
-  <li>nodemon (dependency) - constanly watch server.js, so we don't need to restart server</li>
-  <li>express-async-handler (dependency) - for use async-await - handling exceptions inside of async-routes</li>
-</ul>
+- express - Express-framework for creating web-apps using NodeJS
+- dotenv - for environment variables
+- colors - use colors for console-log
+- jsonwebtoken - generate web-token for autontification in client-side
+- nodemon (dependency) - constanly watch server.js, so we don't need to restart server
+- express-async-handler (dependency) - for use async-await - handling exceptions inside of async-routes
 
 #### Frontend libs:
-<ul>
-  <li>react, react-dom version of 17 because of issue for lib 'react-modal'
-  <li>concurrently - run client and server at the same time</li>
-  <li>react-router-dom - page navigation</li>
-  <li>react-toastify - nice alerts</li>
-  <li>axios - for async http-queries</li>
-  <li>react-icons - inproject use icons of FontAwesome</li>
-  <li>react-modal - work with modal windows</li>
-</ul>
+- react, react-dom version of 17 because of issue for lib 'react-modal'
+- concurrently - run client and server at the same time
+- react-router-dom - page navigation
+- react-toastify - nice alerts
+- axios - for async http-queries
+- react-icons - inproject use icons of FontAwesome
+- react-modal - work with modal windows
 
 ### Deploying
 #### set Environment Variables:
-<ol>
-  <li>MongoDB database URI (MONGO_URI)</li>
-  <li>JWT secret (JWT_SECRET)</li>
-</ol>
+1. MongoDB database URI (MONGO_URI)
+2. JWT secret (JWT_SECRET)
