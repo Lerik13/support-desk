@@ -1,6 +1,8 @@
 # Support Desk Application
 Client-Server app for tracking tickets, using stack of technologies MERN: MongoDB + ExpressJS + React + NodeJS
-
+```
+test user: john@gmail.com, password: 123
+```
 State-management: Redux/toolkit
 
 Design: mobile-first
@@ -23,21 +25,21 @@ test user: john@gmail.com, password: 123
 
 ### Developing details
 #### Backend libs:
-- express - Express-framework for creating web-apps using NodeJS
-- dotenv - for environment variables
-- colors - use colors for console-log
-- jsonwebtoken - generate web-token for autontification in client-side
-- nodemon (dependency) - constanly watch server.js, so we don't need to restart server
-- express-async-handler (dependency) - for use async-await - handling exceptions inside of async-routes
+- express -- Express-framework for creating web-apps using NodeJS
+- dotenv -- for environment variables
+- colors -- use colors for console-log
+- jsonwebtoken -- generate web-token for autontification in client-side
+- nodemon (dependency) -- constantly watch server.js, so we don't need to restart server
+- express-async-handler (dependency) -- for use async-await -- handling exceptions inside of async-routes
 
 #### Frontend libs:
 - react, react-dom version of 17 because of issue for lib 'react-modal'
-- concurrently - run client and server at the same time
-- react-router-dom - page navigation
-- react-toastify - nice alerts
-- axios - for async http-queries
-- react-icons - inproject use icons of FontAwesome
-- react-modal - work with modal windows
+- concurrently -- run client and server at the same time
+- react-router-dom -- page navigation
+- react-toastify -- nice alerts
+- axios -- for async http-queries
+- react-icons -- in project use icons of FontAwesome
+- react-modal -- work with modal windows
 
 ### Deploying
 #### set Environment Variables:
