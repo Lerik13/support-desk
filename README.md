@@ -7,8 +7,7 @@ State-management: Redux/toolkit
 
 Design: mobile-first
 
-MongoDB models:
-
+MongoDB models:<br>
 ![DB Schema](https://github.com/Lerik13/support-desk/blob/master/schemaDB.jpg?raw=true "DB Schema")
 
 ### Client Functionality
