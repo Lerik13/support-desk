@@ -11,14 +11,28 @@ MongoDB models:<br>
 ![DB Schema](https://github.com/Lerik13/support-desk/blob/master/schemaDB.jpg?raw=true "DB Schema")
 
 ### Client Functionality
+
+![Main](https://github.com/Lerik13/support-desk/blob/master/screenshots/1.jpg?raw=true "MainPage")
+
 1. Register User
 2. Login/Logout (saving JWT-token in user's Local Storage)
 ```
 test user: john@gmail.com, password: 123
 ```
+![Login](https://github.com/Lerik13/support-desk/blob/master/screenshots/2.jpg?raw=true "Login")
+
 3. Create new Ticket for authorized user
+
+![Create](https://github.com/Lerik13/support-desk/blob/master/screenshots/5.jpg?raw=true "CraeteNewTicket")
+
 4. See all user's tickets
+
+![SeeUsersTickets](https://github.com/Lerik13/support-desk/blob/master/screenshots/3.jpg?raw=true "SeeUsersTickets")
+
 5. Edit description of user's ticket if the ticket is not-clossed
+
+![EditTicket](https://github.com/Lerik13/support-desk/blob/master/screenshots/4.jpg?raw=true "EditTicket")
+
 6. Change status for ticket: (ticket created with status='new'; if status is closed, user cannot edit the ticket; user has possibility to reopen the ticket, status will be open)
 7. Add/Edit/Remove Note for user's ticket if the ticket is not-clossed and this note is not from Admin
 
